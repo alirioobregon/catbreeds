@@ -10,6 +10,10 @@ final appRouter = GoRouter(
       name: SplashScreen.name,
       builder: (context, state) => SplashScreen(),
     ),
-    // GoRoute(path: "home", name: HomeScreen.name),
+    GoRoute(
+      path: "/home",
+      name: HomeScreen.name,
+      builder: (context, state) => HomeScreen(),
+    ),
   ],
 );

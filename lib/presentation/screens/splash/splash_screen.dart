@@ -20,10 +20,30 @@ class SplashScreen extends ConsumerWidget {
             SizedBox(height: 80),
             Icon(Icons.abc_outlined),
             Text(Environment.apiKey),
-            catBreedsAsync.when(
-              data: (data) => Text('$data'),
-              error: (e, st) => Text('$e'),
-              loading: () => const Center(child: CircularProgressIndicator()),
+            Expanded(
+              child: catBreedsAsync.when(
+                data: (data) => ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final i = data[index];
+                    return ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          i.urlImage.toString(),
+                          width: 56,
+                          height: 56,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      title: Text(i.name),
+                      subtitle: Text(i.urlImage ?? ''),
+                    );
+                  },
+                ),
+                error: (e, st) => Text('$e'),
+                loading: () => const Center(child: CircularProgressIndicator()),
+              ),
             ),
           ],
         ),

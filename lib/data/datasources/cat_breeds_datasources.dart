@@ -23,8 +23,8 @@ class CatBreedsDatasources extends CatBreedsDatasource {
         )
         .toList();
 
-    print(cats.toString());
+    // print(cats.toString());
 
-    return [];
+    return cats;
   }
 }

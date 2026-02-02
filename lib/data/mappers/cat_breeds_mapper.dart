@@ -3,5 +3,8 @@ import 'package:technical_test_pragma/domain/entities/cat_breeds.dart';
 
 class CatBreedsMapper {
   static CatBreeds catToEntity(CatBreedsResponse catsBreedsResponse) =>
-      CatBreeds(name: catsBreedsResponse.name);
+      CatBreeds(
+        name: catsBreedsResponse.name,
+        urlImage: catsBreedsResponse.referenceImageId,
+      );
 }

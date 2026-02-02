@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:technical_test_pragma/config/constants/environment.dart';
 import 'package:technical_test_pragma/domain/entities/cat_breeds.dart';
@@ -58,52 +59,66 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(8),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    catBreeds.name,
-                    textAlign: TextAlign.start,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+    return GestureDetector(
+      onTap: () {
+        context.push('/details/${catBreeds.name}');
+      },
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      catBreeds.name,
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Text(
-                    catBreeds.urlImage ?? '',
-                    textAlign: TextAlign.end,
+                  Expanded(
+                    child: Text(
+                      catBreeds.urlImage ?? '',
+                      textAlign: TextAlign.end,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 160),
-              child: Image.network(
-                catBreeds.urlImage ?? Environment.noImageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
+                ],
               ),
-            ),
-
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    catBreeds.name,
-                    textAlign: TextAlign.start,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 160),
+                child: Image.network(
+                  catBreeds.urlImage ?? Environment.noImageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    return SvgPicture.asset(
+                      'assets/images/cat.svg',
+                      width: 160,
+                      fit: BoxFit.contain,
+                    );
+                  },
                 ),
-                Expanded(child: Text(catBreeds.name, textAlign: TextAlign.end)),
-              ],
-            ),
-          ],
+              ),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      catBreeds.name,
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(catBreeds.name, textAlign: TextAlign.end),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

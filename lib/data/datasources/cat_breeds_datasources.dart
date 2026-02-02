@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:technical_test_pragma/config/constants/environment.dart';
 import 'package:technical_test_pragma/data/mappers/cat_breeds_mapper.dart';
 import 'package:technical_test_pragma/data/models/cat_breeds_response.dart';
 import 'package:technical_test_pragma/domain/datasources/cat_breeds_datasource.dart';
@@ -23,7 +24,7 @@ class CatBreedsDatasources extends CatBreedsDatasource {
         )
         .toList();
 
-    // print(cats.toString());
+    Environment.catBreedsList = cats;
 
     return cats;
   }

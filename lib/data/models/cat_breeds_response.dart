@@ -21,7 +21,7 @@ class CatBreedsResponse {
         id: json["id"],
         name: json["name"],
         origin: json["origin"],
-        referenceImageId: json["referenceImageId"],
+        referenceImageId: json["reference_image_id"],
       );
 
   Map<String, dynamic> toJson() => {"id": id, "name": name, "origin": origin};

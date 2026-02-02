@@ -73,14 +73,20 @@ class ItemCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Expanded(child: Text(catBreeds.name, textAlign: TextAlign.end)),
+                Expanded(
+                  child: Text(
+                    catBreeds.urlImage ?? '',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
               ],
             ),
             ConstrainedBox(
               constraints: BoxConstraints(maxHeight: 160),
-              child: SvgPicture.asset(
-                'assets/images/cat.svg',
-                fit: BoxFit.contain,
+              child: Image.network(
+                catBreeds.urlImage ?? Environment.noImageUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
               ),
             ),
 

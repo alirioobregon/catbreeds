@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:technical_test_pragma/config/constants/environment.dart';
 import 'package:technical_test_pragma/domain/entities/cat_breeds.dart';
+import 'package:technical_test_pragma/presentation/providers/cats_filtered_providers.dart';
 import 'package:technical_test_pragma/presentation/providers/cats_providers.dart';
+import 'package:technical_test_pragma/presentation/widgets/text_widgets_custom.dart';
 
 class HomeScreen extends ConsumerWidget {
   static const name = 'home-screen';
@@ -14,7 +16,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final catBreedsAsync = ref.watch(catBreedsNotifier);
+    final query = ref.read(catSearchQueryProvider.notifier).searchQuery;
+    final controller = ref.read(catSearchQueryProvider.notifier);
+    final catBreedsProvider = ref.watch(catSearchQueryProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,6 +29,7 @@ class HomeScreen extends ConsumerWidget {
             color: Theme.of(context).colorScheme.inversePrimary,
             fontWeight: FontWeight.bold,
           ),
+          textAlign: TextAlign.center,
         ),
         elevation: 8,
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -32,8 +37,33 @@ class HomeScreen extends ConsumerWidget {
       body: Center(
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: TextField(
+                controller: controller.textController,
+                keyboardType: TextInputType.text,
+                onChanged: (value) => controller.setSearchQuery(value),
+                decoration: InputDecoration(
+                  hintText: 'Buscar raza...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: query.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () => {
+                            controller.textController.clear(),
+                            controller.clearSearchQuery(),
+                            // FocusScope.of(context).unfocus(),
+                          },
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
             Expanded(
-              child: catBreedsAsync.when(
+              child: catBreedsProvider.when(
                 data: (data) => ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
@@ -76,18 +106,19 @@ class ItemCard extends StatelessWidget {
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  Expanded(
-                    child: Text(
-                      catBreeds.urlImage ?? '',
-                      textAlign: TextAlign.end,
-                    ),
-                  ),
+                  Expanded(child: Text('Mas...', textAlign: TextAlign.end)),
                 ],
               ),
+              SizedBox(height: 8),
               ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 160),
+                constraints: BoxConstraints(maxHeight: 180),
                 child: Image.network(
                   catBreeds.urlImage ?? Environment.noImageUrl,
                   fit: BoxFit.cover,
@@ -101,19 +132,21 @@ class ItemCard extends StatelessWidget {
                   },
                 ),
               ),
-
+              SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      catBreeds.name,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    child: TitleSubtitleData(
+                      title: 'País: ',
+                      subtitle: catBreeds.origin,
                     ),
                   ),
                   Expanded(
-                    child: Text(catBreeds.name, textAlign: TextAlign.end),
+                    child: TitleSubtitleData(
+                      title: 'Inteligencia: ',
+                      subtitle: catBreeds.intelligence.toString(),
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ],
               ),
